@@ -11,33 +11,54 @@ function App() {
   const [category, setCategory] = useState('');
   const [photos, setPhotos] = useState([]);
   const [selectedPhoto, setSelectedPhoto] = useState(null);
+  const [activeSearch, setActiveSearch] = useState(false);
+
 
   const fetchData = async ({ query, category }) => {
     // const apiKey = import.meta.env.VITE_UNSPLASH_API_KEY;
     const apiKey = 'lR1mjztVpnZvVtE5pWbsTqNRUryrrFZ-5JBEHqfIx2g';
 
-    const response = await axios.get('https://api.unsplash.com/photos/random', {
-      params: {
-        client_id: apiKey,
-        count: 10,
-      },
-    });
+    if (query || category) {
+      let searchQuery = query;
+      if (query && category) {
+        searchQuery = `${query} ${category}`
+      } else if (category) {
+        searchQuery = category;
+      }
 
-    // console.log(response);
-    setPhotos(response.data);
+      const response = await axios.get('https://api.unsplash.com/search/photos', {
+        params: {
+          client_id: apiKey,
+          query: searchQuery,
+        },
+      }
+      );
+
+      // console.log(response);
+      setPhotos(response.data.results);
+      return;
+    }
   }
 
   useEffect(() => {
     fetchData(query, category);
   }, []);
 
+  useEffect(() => {
+    if (activeSearch) {
+      fetchData({ query, category });
+      setActiveSearch(false);
+    }
+  }, [activeSearch])
+
   return (
     <div className='container'>
-      <SearchBar />
+      <SearchBar setQuery={setQuery} setCategory={setCategory} setActiveSearch={setActiveSearch} />
       <PhotoList photos={photos} setSelectedPhoto={setSelectedPhoto} />
       {selectedPhoto && <SelectPhoto photo={selectedPhoto} setSelectedPhoto={setSelectedPhoto} />}
     </div>
   )
+
 }
 
-export default App
+export default App;

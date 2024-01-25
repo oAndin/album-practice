@@ -53,3 +53,26 @@
     }
   }
 }
+
+.selected-photo-backdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: #00000090;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  & .selected-photo-container {
+    max-width: 90%;
+    max-height: 90%;
+
+    & img {
+      max-width: 45%;
+      max-height: 100%;
+      border-radius: 8px;
+    }
+  }
+}
