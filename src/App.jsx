@@ -38,6 +38,13 @@ function App() {
       setPhotos(response.data.results);
       return;
     }
+    const response = await axios.get('https://api.unsplash.com/photos/random', {
+      params: {
+        client_id: apiKey,
+        count: 10,
+      },
+    });
+    setPhotos(response.data);
   }
 
   useEffect(() => {
